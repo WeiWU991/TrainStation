@@ -285,7 +285,7 @@
     "code": "1728",
     "slug": "milano-centrale",
     "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1728"
+    "url": "https://iechub.rfi.it/ArriviPartenze/en/arrivalsdepartures/Monitor?placeId=1728&arrivals=False"
   },
   {
     "name": "Milano Porta Garibaldi",
@@ -300,10 +300,10 @@
     "name": "Napoli Centrale",
     "city": "Naples",
     "country": "IT",
-    "code": "1766",
+    "code": "1888",
     "slug": "napoli-centrale",
     "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1766"
+    "url": "https://iechub.rfi.it/ArriviPartenze/en/arrivalsdepartures/Monitor?placeId=1888&arrivals=False"
   },
   {
     "name": "Padova",
@@ -327,10 +327,10 @@
     "name": "Roma Termini",
     "city": "Rome",
     "country": "IT",
-    "code": "1802",
+    "code": "2416",
     "slug": "roma-termini",
     "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1802"
+    "url": "https://iechub.rfi.it/ArriviPartenze/en/arrivalsdepartures/Monitor?placeId=2416&arrivals=False"
   },
   {
     "name": "Roma Tiburtina",

@@ -182,6 +182,72 @@ app.get('/board', async (req, res) => {
       return res.send(html);
     }
 
+    // 法国 SNCF（暂不可用）
+    if (station.type === 'SNCF') {
+      return res.send(`
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>${station.name} - 功能开发中</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 20px;
+              }
+              .container {
+                background: white;
+                border-radius: 12px;
+                padding: 40px;
+                text-align: center;
+                max-width: 600px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+              }
+              h1 {
+                color: #667eea;
+                margin-bottom: 20px;
+              }
+              .info {
+                color: #666;
+                line-height: 1.6;
+                margin: 20px 0;
+              }
+              .link {
+                display: inline-block;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 6px;
+                text-decoration: none;
+                margin: 10px;
+                transition: transform 0.2s;
+              }
+              .link:hover {
+                transform: translateY(-2px);
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🇫🇷 ${station.name}</h1>
+              <p class="info">
+                <strong>功能开发中</strong><br><br>
+                SNCF Connect 官方看板暂不提供公开 API，我们正在研究替代方案。<br>
+                请访问官方网站查看实时信息：
+              </p>
+              <a href="${station.url}" target="_blank" class="link">访问 SNCF Connect 官方网站</a>
+              <a href="/" class="link">返回首页</a>
+            </div>
+          </body>
+        </html>
+      `);
+    }
+
     // 其他类型（德国、奥地利、意大利、荷兰、英国）
     const response = await fetchWithRetry(station.url);
     const $ = cheerio.load(response.data);
