@@ -6,7 +6,6 @@ const rateLimit = require('express-rate-limit');
 const zlib = require('zlib');
 const path = require('path');
 const { URL } = require('url');
-const puppeteer = require('puppeteer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -104,70 +103,6 @@ function fetch(url, options = {}) {
 
     req.end();
   });
-}
-
-// Puppeteer browser instance (reuse for performance)
-let browserInstance = null;
-
-async function getBrowser() {
-  if (!browserInstance || !browserInstance.isConnected()) {
-    console.log('[Puppeteer] Launching browser...');
-    browserInstance = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
-    });
-    console.log('[Puppeteer] Browser launched');
-  }
-  return browserInstance;
-}
-
-// Fetch Germany (DB) board using Puppeteer
-async function fetchDBBoard(stationName) {
-  let page = null;
-  try {
-    const browser = await getBrowser();
-    page = await browser.newPage();
-    
-    // Set viewport and user agent
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
-    
-    console.log(`[Puppeteer] Navigating to bahn.expert/${stationName}`);
-    
-    // Navigate to page
-    await page.goto(`https://bahn.expert/${encodeURIComponent(stationName)}`, {
-      waitUntil: 'networkidle2',
-      timeout: 30000
-    });
-    
-    // Wait for departure board to load
-    console.log('[Puppeteer] Waiting for content...');
-    await page.waitForSelector('[data-testid="departure"]', { 
-      timeout: 15000 
-    }).catch(() => {
-      console.log('[Puppeteer] Departure selector not found, trying alternative...');
-      return page.waitForSelector('.departure', { timeout: 5000 });
-    });
-    
-    // Get rendered HTML
-    const html = await page.content();
-    console.log('[Puppeteer] Content fetched successfully');
-    
-    return html;
-    
-  } catch (error) {
-    console.error(`[Puppeteer] Error for ${stationName}:`, error.message);
-    throw error;
-  } finally {
-    if (page) {
-      await page.close();
-    }
-  }
 }
 
 // 带重试的请求
@@ -331,79 +266,7 @@ app.get('/board', async (req, res) => {
       `);
     }
 
-    // 德国 DB（使用 Puppeteer）
-    if (station.type === 'DB') {
-      try {
-        console.log(`[DB] Fetching board for ${station.name}`);
-        const html = await fetchDBBoard(station.code);
-        return res.send(html);
-      } catch (error) {
-        console.error(`[DB] Error:`, error.message);
-        return res.status(500).send(`
-          <html>
-            <head>
-              <meta charset="UTF-8">
-              <title>${station.name} - 加载失败</title>
-              <style>
-                body {
-                  font-family: Arial, sans-serif;
-                  background: linear-gradient(135deg, #E5007D 0%, #C90065 100%);
-                  min-height: 100vh;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  margin: 0;
-                  padding: 20px;
-                }
-                .container {
-                  background: white;
-                  border-radius: 12px;
-                  padding: 40px;
-                  text-align: center;
-                  max-width: 600px;
-                  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-                }
-                h1 {
-                  color: #E5007D;
-                  margin-bottom: 20px;
-                }
-                .info {
-                  color: #666;
-                  line-height: 1.6;
-                  margin: 20px 0;
-                }
-                .link {
-                  display: inline-block;
-                  background: linear-gradient(135deg, #E5007D 0%, #C90065 100%);
-                  color: white;
-                  padding: 12px 24px;
-                  border-radius: 6px;
-                  text-decoration: none;
-                  margin: 10px;
-                  transition: transform 0.2s;
-                }
-                .link:hover {
-                  transform: translateY(-2px);
-                }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <h1>🇩🇪 ${station.name}</h1>
-                <p class="info">
-                  <strong>数据加载失败</strong><br><br>
-                  请稍后再试，或访问官方网站：
-                </p>
-                <a href="${station.url}" target="_blank" class="link">访问 bahn.expert</a>
-                <a href="/" class="link">返回首页</a>
-              </div>
-            </body>
-          </html>
-        `);
-      }
-    }
-
-    // 其他类型（奥地利、意大利、荷兰、英国）
+    // 其他类型（德国、奥地利、意大利、荷兰、英国）
     const response = await fetchWithRetry(station.url);
     const $ = cheerio.load(response.data);
     
