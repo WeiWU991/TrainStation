@@ -58,7 +58,7 @@
     "city": "Geneva",
     "country": "CH",
     "code": "Genève",
-    "slug": "gen-ve",
+    "slug": "geneve",
     "type": "SBB",
     "url": "https://transport.opendata.ch/v1/stationboard?station=Gen%C3%A8ve&limit=40"
   },
@@ -85,7 +85,7 @@
     "city": "Zurich",
     "country": "CH",
     "code": "Zürich Hauptbahnhof",
-    "slug": "z-rich-hauptbahnhof",
+    "slug": "zurich-hauptbahnhof",
     "type": "SBB",
     "url": "https://transport.opendata.ch/v1/stationboard?station=Z%C3%BCrich%20Hauptbahnhof&limit=40"
   },
@@ -103,7 +103,7 @@
     "city": "Cologne",
     "country": "DE",
     "code": "Köln Hauptbahnhof",
-    "slug": "k-ln-hauptbahnhof",
+    "slug": "koln-hauptbahnhof",
     "type": "DB",
     "url": "https://bahn.expert/K%C3%B6ln%20Hauptbahnhof"
   },
@@ -121,7 +121,7 @@
     "city": "Düsseldorf",
     "country": "DE",
     "code": "Düsseldorf Hauptbahnhof",
-    "slug": "d-sseldorf-hauptbahnhof",
+    "slug": "dusseldorf-hauptbahnhof",
     "type": "DB",
     "url": "https://bahn.expert/D%C3%BCsseldorf%20Hauptbahnhof"
   },
@@ -166,7 +166,7 @@
     "city": "Munich",
     "country": "DE",
     "code": "München Hauptbahnhof",
-    "slug": "m-nchen-hauptbahnhof",
+    "slug": "munchen-hauptbahnhof",
     "type": "DB",
     "url": "https://bahn.expert/M%C3%BCnchen%20Hauptbahnhof"
   },
