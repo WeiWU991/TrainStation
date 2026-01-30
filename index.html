@@ -165,6 +165,7 @@
             padding: 40px;
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
+            grid-column: 1 / -1;
         }
 
         @media (max-width: 768px) {
@@ -191,6 +192,7 @@
             color: white;
             font-size: 1.2em;
             padding: 40px;
+            grid-column: 1 / -1;
         }
     </style>
 </head>
@@ -220,8 +222,10 @@
     </div>
 
     <script>
-        // 配置
-        const API_BASE_URL = 'https://trainstation-production-706f.up.railway.app';
+        // 配置 - 使用相对路径，因为现在选择页面和 API 在同一个域名下
+        const API_BASE_URL = window.location.origin;
+        
+        console.log('API Base URL:', API_BASE_URL);
         
         // 国家信息配置
         const countryInfo = {
@@ -240,11 +244,35 @@
         // 初始化
         async function init() {
             try {
+                console.log('正在获取车站列表...');
+                
                 // 获取车站列表
                 const response = await fetch(`${API_BASE_URL}/stations/list`);
-                if (!response.ok) throw new Error('获取车站数据失败');
+                console.log('Response status:', response.status);
                 
-                allStations = await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('收到的数据:', data);
+                
+                // 处理不同的数据格式
+                if (Array.isArray(data)) {
+                    // 如果返回的是数组
+                    allStations = data;
+                } else if (data.stations && Array.isArray(data.stations)) {
+                    // 如果返回的是对象，包含 stations 数组
+                    allStations = data.stations;
+                } else {
+                    throw new Error('数据格式不正确');
+                }
+                
+                console.log('加载了', allStations.length, '个车站');
+                
+                if (allStations.length === 0) {
+                    throw new Error('没有车站数据');
+                }
                 
                 // 创建国家标签
                 createCountryTabs();
@@ -257,7 +285,8 @@
                 document.getElementById('stationsGrid').innerHTML = `
                     <div class="no-results">
                         ⚠️ 无法加载车站数据<br>
-                        <small>请检查网络连接或稍后再试</small>
+                        <small>${error.message}</small><br>
+                        <small>请检查网络连接或<a href="${API_BASE_URL}/health" target="_blank" style="color: white;">查看API状态</a></small>
                     </div>
                 `;
             }
@@ -266,13 +295,25 @@
         // 创建国家标签
         function createCountryTabs() {
             const tabsContainer = document.getElementById('countryTabs');
-            const countries = [...new Set(allStations.map(s => s.country))];
             
-            countries.forEach(countryCode => {
+            // 统计各国家车站数量
+            const countryCounts = {};
+            allStations.forEach(s => {
+                countryCounts[s.country] = (countryCounts[s.country] || 0) + 1;
+            });
+            
+            console.log('国家统计:', countryCounts);
+            
+            // 按顺序显示国家标签
+            const countryOrder = ['IT', 'NL', 'DE', 'CH', 'UK', 'FR'];
+            
+            countryOrder.forEach(countryCode => {
+                const count = countryCounts[countryCode];
+                if (!count) return; // 如果该国家没有车站，跳过
+                
                 const info = countryInfo[countryCode];
                 if (!info) return;
                 
-                const count = allStations.filter(s => s.country === countryCode).length;
                 const button = document.createElement('button');
                 button.className = 'country-tab';
                 button.dataset.country = countryCode;
@@ -285,6 +326,8 @@
         // 选择国家
         function selectCountry(country) {
             currentCountry = country;
+            
+            console.log('选择国家:', country);
             
             // 更新标签状态
             document.querySelectorAll('.country-tab').forEach(tab => {
@@ -301,6 +344,8 @@
         function filterStations() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
+            console.log('筛选条件 - 国家:', currentCountry, '搜索:', searchTerm);
+            
             filteredStations = allStations.filter(station => {
                 // 国家过滤
                 if (currentCountry !== 'all' && station.country !== currentCountry) {
@@ -312,12 +357,15 @@
                     return (
                         station.name.toLowerCase().includes(searchTerm) ||
                         station.city.toLowerCase().includes(searchTerm) ||
-                        station.code.toLowerCase().includes(searchTerm)
+                        station.code.toLowerCase().includes(searchTerm) ||
+                        station.slug.toLowerCase().includes(searchTerm)
                     );
                 }
                 
                 return true;
             });
+            
+            console.log('筛选结果:', filteredStations.length, '个车站');
             
             renderStations();
         }
@@ -338,6 +386,11 @@
             
             grid.innerHTML = filteredStations.map(station => {
                 const info = countryInfo[station.country];
+                if (!info) {
+                    console.warn('未知国家代码:', station.country);
+                    return '';
+                }
+                
                 return `
                     <div class="station-card" onclick="goToBoard('${station.slug}')">
                         <div class="station-flag">${info.flag}</div>
@@ -347,18 +400,25 @@
                     </div>
                 `;
             }).join('');
+            
+            console.log('已渲染', filteredStations.length, '个车站');
         }
 
         // 跳转到看板页面
         function goToBoard(slug) {
+            console.log('跳转到车站:', slug);
             const boardUrl = `${API_BASE_URL}/board?station=${slug}`;
             window.location.href = boardUrl;
         }
 
         // 搜索输入监听
-        document.getElementById('searchInput').addEventListener('input', filterStations);
+        document.getElementById('searchInput').addEventListener('input', () => {
+            console.log('搜索输入:', document.getElementById('searchInput').value);
+            filterStations();
+        });
 
         // 页面加载时初始化
+        console.log('=== 页面加载 ===');
         init();
     </script>
 </body>
