@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enhanced User-Agent pool with real browser fingerprints
+// Enhanced User-Agent pool
 const USER_AGENTS = [
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -37,21 +37,21 @@ function getBrowserHeaders(url) {
   };
 }
 
-// Load stations data with fallback
+// Load stations data
 let stationsData = [];
 try {
   stationsData = require('./stations.json');
   console.log(`✓ Loaded ${stationsData.length} stations from stations.json`);
 } catch (error) {
-  console.log('⚠ stations.json not found, using backup data');
-  stationsData = require('./stations-backup.json');
+  console.log('⚠ stations.json not found');
+  process.exit(1);
 }
 
 // Middleware
 app.use(express.json());
 app.use(express.static(__dirname, { index: false }));
 
-// Root route - Station selector page
+// Root route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -62,10 +62,12 @@ app.get('/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     stations: stationsData.length,
+    version: '2.1',
     features: {
       stationSelector: true,
       enhancedProxy: true,
-      retryMechanism: true
+      retryMechanism: true,
+      rateLimiting: true
     }
   });
 });
@@ -93,19 +95,46 @@ app.get('/stations/search', (req, res) => {
   res.json(results);
 });
 
-// Enhanced fetch with retry mechanism
-async function fetchWithRetry(url, options, maxRetries = 3) {
+// Rate limiting - simple in-memory store
+const requestLog = new Map();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 20; // 20 requests per minute per IP
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const userRequests = requestLog.get(ip) || [];
+  
+  // Clean old requests
+  const recentRequests = userRequests.filter(time => now - time < RATE_LIMIT_WINDOW);
+  
+  if (recentRequests.length >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  requestLog.set(ip, recentRequests);
+  return true;
+}
+
+// Enhanced fetch with retry and delay
+async function fetchWithRetry(url, options, maxRetries = 3, baseDelay = 1000) {
   let lastError;
   
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
+      // Add random delay between 500ms-1500ms to avoid rate limiting
+      if (attempt > 1) {
+        const randomDelay = 500 + Math.random() * 1000;
+        await new Promise(resolve => setTimeout(resolve, randomDelay));
+      }
+      
       console.log(`[Attempt ${attempt}/${maxRetries}] Fetching: ${url}`);
       
       const response = await axios({
         ...options,
-        timeout: 30000, // 30 second timeout
+        timeout: 30000,
         maxRedirects: 5,
-        validateStatus: (status) => status < 500 // Accept any status < 500
+        validateStatus: (status) => status < 500
       });
       
       console.log(`✓ Success (${response.status}): ${url}`);
@@ -116,8 +145,7 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
       console.log(`✗ Attempt ${attempt} failed: ${error.message}`);
       
       if (attempt < maxRetries) {
-        // Wait before retry (exponential backoff)
-        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 5000);
         console.log(`  Waiting ${delay}ms before retry...`);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
@@ -130,20 +158,57 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
 // Main board proxy endpoint
 app.get('/board', async (req, res) => {
   const stationSlug = req.query.station;
-  const cityQuery = req.query.city;
+  const clientIp = req.ip || req.connection.remoteAddress;
 
-  console.log(`\n🚂 Board request: station=${stationSlug}, city=${cityQuery}`);
+  console.log(`\n🚂 Board request from ${clientIp}: station=${stationSlug}`);
+
+  // Rate limiting check
+  if (!checkRateLimit(clientIp)) {
+    console.log(`⚠ Rate limit exceeded for ${clientIp}`);
+    return res.status(429).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Too Many Requests</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+            text-align: center;
+          }
+          .warning-box {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          }
+          h1 { color: #f39c12; font-size: 48px; margin: 0; }
+          p { font-size: 18px; margin: 20px 0; }
+          .tip { background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="warning-box">
+          <h1>⏱️</h1>
+          <h2>请稍后再试</h2>
+          <p>您的请求过于频繁，请等待1分钟后再试。</p>
+          <div class="tip">
+            <strong>提示</strong>: 为了保护铁路网站服务器，我们限制了请求频率。<br>
+            每个IP每分钟最多 20 次请求。
+          </div>
+          <p><a href="/">← 返回首页</a></p>
+        </div>
+      </body>
+      </html>
+    `);
+  }
 
   // Find station
-  let station;
-  if (stationSlug) {
-    station = stationsData.find(s => s.slug === stationSlug);
-  } else if (cityQuery) {
-    station = stationsData.find(s => 
-      s.city.toLowerCase() === cityQuery.toLowerCase() ||
-      s.name.toLowerCase().includes(cityQuery.toLowerCase())
-    );
-  }
+  const station = stationsData.find(s => s.slug === stationSlug);
 
   if (!station) {
     console.log('✗ Station not found');
@@ -168,35 +233,14 @@ app.get('/board', async (req, res) => {
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
           }
           h1 { color: #e74c3c; }
-          .suggestions {
-            margin-top: 20px;
-            padding: 15px;
-            background: #ecf0f1;
-            border-radius: 5px;
-          }
-          a {
-            color: #3498db;
-            text-decoration: none;
-          }
-          a:hover {
-            text-decoration: underline;
-          }
+          a { color: #3498db; }
         </style>
       </head>
       <body>
         <div class="error-box">
           <h1>🚫 Station Not Found</h1>
-          <p>Cannot find station: <strong>${stationSlug || cityQuery || 'unknown'}</strong></p>
-          
-          <div class="suggestions">
-            <h3>Available Stations:</h3>
-            <ul>
-              ${stationsData.slice(0, 10).map(s => 
-                `<li><a href="/board?station=${s.slug}">${s.name} (${s.city}, ${s.country})</a></li>`
-              ).join('')}
-            </ul>
-            <p><a href="/">← Back to station selector</a></p>
-          </div>
+          <p>Cannot find station: <strong>${stationSlug || 'unknown'}</strong></p>
+          <p><a href="/">← Back to station selector</a></p>
         </div>
       </body>
       </html>
@@ -207,61 +251,46 @@ app.get('/board', async (req, res) => {
   console.log(`  URL: ${station.url}`);
 
   try {
-    // Prepare headers
     const headers = getBrowserHeaders(station.url);
     
-    // Fetch with retry
+    // Fetch with retry and delay
     const response = await fetchWithRetry(station.url, {
       method: 'GET',
       headers: headers,
       responseType: 'text'
-    });
+    }, 3, 2000); // 3 retries, 2 second base delay
 
     let html = response.data;
     
     console.log(`✓ Received ${html.length} bytes`);
 
-    // Process HTML based on station type
+    // Process HTML
     if (station.type === 'RFI') {
-      // Italian railways - clean up
       html = html.replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '');
       html = html.replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '');
       html = html.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '');
       
     } else if (station.type === 'NS') {
-      // Dutch railways - minimal processing
       html = html.replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '');
       
     } else if (station.type === 'NationalRail') {
-      // UK National Rail - special handling
-      // The issue: it's showing the search form instead of the board
-      // We need to ensure we're getting the departure board, not the search page
-      
       if (html.includes('Show live trains') || html.includes('Station name or code')) {
-        console.log('⚠ Received search form instead of board, trying alternative URL...');
-        
-        // Try alternative URL format
+        console.log('⚠ Received search form, trying alternative URL...');
         const altUrl = `https://ojp.nationalrail.co.uk/service/ldbboard/dep/${station.code}`;
-        console.log(`  Trying: ${altUrl}`);
-        
         const altResponse = await fetchWithRetry(altUrl, {
           method: 'GET',
           headers: getBrowserHeaders(altUrl),
           responseType: 'text'
-        });
-        
+        }, 3, 2000);
         html = altResponse.data;
-        console.log(`✓ Alternative URL returned ${html.length} bytes`);
       }
       
-      // Clean up UK rail HTML
       html = html.replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '');
       html = html.replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '');
       html = html.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '');
-      html = html.replace(/class="[^"]*skiplink[^"]*"/gi, '');
     }
 
-    // Inject CSS to hide common UI elements
+    // Inject CSS
     const injectedCSS = `
       <style>
         header, footer, nav, 
@@ -279,14 +308,12 @@ app.get('/board', async (req, res) => {
       </style>
     `;
 
-    // Insert CSS before </head>
     if (html.includes('</head>')) {
       html = html.replace('</head>', `${injectedCSS}</head>`);
     } else {
       html = injectedCSS + html;
     }
 
-    // Send processed HTML
     res.set('Content-Type', 'text/html; charset=utf-8');
     res.send(html);
     
@@ -295,13 +322,13 @@ app.get('/board', async (req, res) => {
   } catch (error) {
     console.error(`✗ Error fetching board for ${station.name}:`, error.message);
     
-    // Send detailed error page
     res.status(503).send(`
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
         <title>Board Unavailable</title>
+        <meta http-equiv="refresh" content="10">
         <style>
           body {
             font-family: Arial, sans-serif;
@@ -325,23 +352,24 @@ app.get('/board', async (req, res) => {
             font-family: monospace;
             font-size: 12px;
           }
-          .retry {
-            margin-top: 20px;
+          .auto-refresh {
+            background: #d1ecf1;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #0c5460;
           }
-          a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-          }
-          a:hover {
-            text-decoration: underline;
-          }
+          a { color: #3498db; }
         </style>
       </head>
       <body>
         <div class="error-box">
           <h1>⚠️ Departure Board Temporarily Unavailable</h1>
           <p>Cannot load departure board for: <strong>${station.name}</strong></p>
+          
+          <div class="auto-refresh">
+            ⏱️ 页面将在 10 秒后自动刷新重试...
+          </div>
           
           <div class="details">
             <strong>Station:</strong> ${station.name} (${station.city}, ${station.country})<br>
@@ -350,21 +378,20 @@ app.get('/board', async (req, res) => {
             <strong>Source URL:</strong> ${station.url}
           </div>
 
-          <div class="retry">
-            <p><strong>Possible causes:</strong></p>
-            <ul>
-              <li>The railway website is temporarily down</li>
-              <li>Network connectivity issues</li>
-              <li>Anti-scraping protection triggered</li>
-            </ul>
-            
-            <p><strong>What you can do:</strong></p>
-            <ul>
-              <li><a href="javascript:location.reload()">Refresh this page</a> to retry</li>
-              <li><a href="${station.url}" target="_blank">Visit official website directly</a></li>
-              <li><a href="/">Try another station</a></li>
-            </ul>
-          </div>
+          <p><strong>可能原因:</strong></p>
+          <ul>
+            <li>铁路网站临时维护或故障</li>
+            <li>请求过于频繁触发了反爬虫保护</li>
+            <li>网络连接问题</li>
+          </ul>
+          
+          <p><strong>解决方法:</strong></p>
+          <ul>
+            <li><a href="javascript:location.reload()">立即刷新</a> (或等待自动刷新)</li>
+            <li><a href="${station.url}" target="_blank">访问官方网站</a></li>
+            <li><a href="/">尝试其他车站</a></li>
+            <li>等待1-2分钟后再试</li>
+          </ul>
         </div>
       </body>
       </html>
@@ -374,15 +401,16 @@ app.get('/board', async (req, res) => {
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🚂 Train Station Departure Board Server`);
+  console.log(`\n🚂 Train Station Departure Board Server v2.1`);
   console.log(`📡 Server running on port ${PORT}`);
   console.log(`\n📍 Available endpoints:`);
-  console.log(`   GET /                      → Station selector page`);
+  console.log(`   GET /                      → Station selector`);
   console.log(`   GET /health                → Health check`);
-  console.log(`   GET /stations/list         → List all stations`);
-  console.log(`   GET /stations/search?q=    → Search stations`);
+  console.log(`   GET /stations/list         → List stations`);
+  console.log(`   GET /stations/search?q=    → Search`);
   console.log(`   GET /board?station=<slug>  → Departure board`);
   console.log(`\n✓ ${stationsData.length} stations loaded`);
-  console.log(`✓ Enhanced proxy with retry mechanism enabled`);
-  console.log(`✓ Ready to serve requests!\n`);
+  console.log(`✓ Enhanced proxy with rate limiting enabled`);
+  console.log(`✓ Max 20 requests/minute per IP`);
+  console.log(`✓ Auto-retry with delays\n`);
 });
