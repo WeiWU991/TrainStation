@@ -3,6 +3,7 @@
  * 支持全欧洲所有主要车站
  * 
  * 新功能:
+ * - 车站选择页面 (/)
  * - 动态车站查询（支持模糊搜索）
  * - 8个国家支持
  * - 车站列表API
@@ -25,6 +26,11 @@ app.use(helmet({
 
 // JSON 解析
 app.use(express.json());
+
+// 静态文件服务 (提供 index.html 和其他静态文件)
+app.use(express.static(__dirname, {
+  index: false // 不自动返回 index.html,我们手动处理根路径
+}));
 
 // 请求日志
 app.use((req, res, next) => {
@@ -234,6 +240,43 @@ function processHTML(html, baseUrl, stationType) {
 }
 
 /**
+ * GET / - 车站选择页面
+ */
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, 'index.html');
+  
+  // 检查 index.html 是否存在
+  if (fs.existsSync(indexPath)) {
+    console.log('[INFO] Serving station selector page (index.html)');
+    res.sendFile(indexPath);
+  } else {
+    // 如果 index.html 不存在,返回 API 信息
+    console.warn('[WARN] index.html not found, returning API info');
+    res.json({
+      service: 'Train Departure Board Proxy V2',
+      version: '2.0.0',
+      features: [
+        'Station selector page (index.html)',
+        'Dynamic station search',
+        'All major European stations',
+        '6 countries support',
+        'Fuzzy search'
+      ],
+      endpoints: {
+        stationSelector: '/ (if index.html exists)',
+        searchStations: '/stations/search?q={query}',
+        listStations: '/stations/list?country={country_code}',
+        departureBoard: '/board?station={station_slug}',
+        health: '/health'
+      },
+      supportedCountries: stationsData ? stationsData.countries : {},
+      totalStations: stationsData ? stationsData.totalStations : 0,
+      note: 'Upload index.html to enable station selector page'
+    });
+  }
+});
+
+/**
  * GET /stations/search - 搜索车站
  */
 app.get('/stations/search', (req, res) => {
@@ -274,17 +317,13 @@ app.get('/stations/list', (req, res) => {
     stations = stations.filter(s => s.country === country.toUpperCase());
   }
   
-  res.json({
-    totalStations: stations.length,
-    countries: stationsData ? stationsData.countries : {},
-    stations: stations.map(s => ({
-      country: s.country,
-      code: s.code,
-      name: s.name,
-      city: s.city,
-      slug: s.slug
-    }))
-  });
+  res.json(stations.map(s => ({
+    country: s.country,
+    code: s.code,
+    name: s.name,
+    city: s.city,
+    slug: s.slug
+  })));
 });
 
 /**
@@ -369,36 +408,19 @@ app.get('/board', async (req, res) => {
  * GET /health
  */
 app.get('/health', (req, res) => {
+  const indexExists = fs.existsSync(path.join(__dirname, 'index.html'));
+  
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     totalStations: stationsData ? stationsData.totalStations : 0,
-    countries: stationsData ? Object.keys(stationsData.countries) : []
-  });
-});
-
-/**
- * GET / - API 信息
- */
-app.get('/', (req, res) => {
-  res.json({
-    service: 'Train Departure Board Proxy V2',
-    version: '2.0.0',
-    features: [
-      'Dynamic station search',
-      'All major European stations',
-      '8 countries support',
-      'Fuzzy search'
-    ],
-    endpoints: {
-      searchStations: '/stations/search?q={query}',
-      listStations: '/stations/list?country={country_code}',
-      departureBoard: '/board?station={station_slug}',
-      health: '/health'
-    },
-    supportedCountries: stationsData ? stationsData.countries : {},
-    totalStations: stationsData ? stationsData.totalStations : 0
+    countries: stationsData ? Object.keys(stationsData.countries) : [],
+    features: {
+      stationSelector: indexExists,
+      apiEndpoints: true,
+      departureBoard: true
+    }
   });
 });
 
@@ -409,6 +431,7 @@ app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
     endpoints: {
+      stationSelector: '/',
       searchStations: '/stations/search?q={query}',
       listStations: '/stations/list',
       departureBoard: '/board?station={station_slug}',
@@ -431,6 +454,8 @@ app.use((err, req, res, next) => {
  * 启动服务器
  */
 app.listen(PORT, () => {
+  const indexExists = fs.existsSync(path.join(__dirname, 'index.html'));
+  
   console.log('='.repeat(70));
   console.log('🚄 Train Departure Board Proxy Server V2');
   console.log('='.repeat(70));
@@ -438,6 +463,14 @@ app.listen(PORT, () => {
   console.log(`🌍 Local: http://localhost:${PORT}`);
   console.log(`📊 Stations loaded: ${stationsData ? stationsData.totalStations : 0}`);
   console.log(`🌐 Countries: ${stationsData ? Object.keys(stationsData.countries).join(', ') : 'None'}`);
+  console.log(`🎨 Station Selector: ${indexExists ? '✅ Available at /' : '⚠️  Upload index.html'}`);
+  console.log('='.repeat(70));
+  console.log('📍 Endpoints:');
+  console.log(`   GET  /                    → Station selector page`);
+  console.log(`   GET  /stations/list       → List all stations`);
+  console.log(`   GET  /stations/search?q=  → Search stations`);
+  console.log(`   GET  /board?station=      → Departure board`);
+  console.log(`   GET  /health              → Health check`);
   console.log('='.repeat(70));
 });
 
