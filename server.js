@@ -295,6 +295,41 @@ app.get('/board', async (req, res) => {
       return res.send($.html());
     }
 
+    // 法国 SNCF (暂时不可用)
+    if (station.type === 'SNCF') {
+      console.log('[SNCF] 法国 SNCF 暂时不可用');
+      return res.status(503).send(`
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>功能开发中</title>
+          </head>
+          <body style="font-family: Arial; padding: 50px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div style="background: white; border-radius: 12px; padding: 40px; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+              <h1 style="color: #f39c12; margin-bottom: 20px;">🚧 功能开发中</h1>
+              <p style="color: #7f8c8d; font-size: 16px; line-height: 1.6;">
+                车站: <strong>${station.name}</strong><br>
+                国家: <strong>法国 🇫🇷</strong>
+              </p>
+              <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px; text-align: left;">
+                <strong style="color: #856404;">📋 说明:</strong>
+                <ul style="color: #856404; margin: 10px 0 0 20px; text-align: left;">
+                  <li>法国 SNCF 没有提供公开的实时看板 API</li>
+                  <li>我们正在寻找替代解决方案</li>
+                  <li>暂时请使用 <a href="https://www.sncf-connect.com" target="_blank" style="color: #3498db;">SNCF Connect 官方网站</a></li>
+                </ul>
+              </div>
+              <div style="margin-top: 20px;">
+                <a href="/" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600;">
+                  🏠 返回首页
+                </a>
+              </div>
+            </div>
+          </body>
+        </html>
+      `);
+    }
+
     // 英国 National Rail
     if (station.type === 'NationalRail') {
       console.log('[NationalRail] 使用英国 National Rail');

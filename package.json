@@ -1,7 +1,7 @@
 {
-  "name": "train-board-proxy-v2",
-  "version": "2.0.0",
-  "description": "Proxy middleware for ALL European railway station departure boards",
+  "name": "train-board-proxy",
+  "version": "3.2.0",
+  "description": "European Train Station Departure Board Proxy",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -15,10 +15,12 @@
     "departure-board"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
+    "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0"
   },
   "devDependencies": {

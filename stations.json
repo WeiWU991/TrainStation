@@ -180,6 +180,51 @@
     "url": "https://bahn.expert/Stuttgart%20Hauptbahnhof"
   },
   {
+    "name": "Lyon Part-Dieu",
+    "city": "Lyon",
+    "country": "FR",
+    "code": "FRXYD",
+    "slug": "lyon-part-dieu",
+    "type": "SNCF",
+    "url": "https://www.sncf-connect.com/app/home/live-board/departures?stationCode=FRXYD"
+  },
+  {
+    "name": "Marseille Saint-Charles",
+    "city": "Marseille",
+    "country": "FR",
+    "code": "FRXRF",
+    "slug": "marseille-saint-charles",
+    "type": "SNCF",
+    "url": "https://www.sncf-connect.com/app/home/live-board/departures?stationCode=FRXRF"
+  },
+  {
+    "name": "Paris Gare du Nord",
+    "city": "Paris",
+    "country": "FR",
+    "code": "FRPNO",
+    "slug": "paris-gare-du-nord",
+    "type": "SNCF",
+    "url": "https://www.sncf-connect.com/app/home/live-board/departures?stationCode=FRPNO"
+  },
+  {
+    "name": "Paris Gare de Lyon",
+    "city": "Paris",
+    "country": "FR",
+    "code": "FRPLY",
+    "slug": "paris-gare-de-lyon",
+    "type": "SNCF",
+    "url": "https://www.sncf-connect.com/app/home/live-board/departures?stationCode=FRPLY"
+  },
+  {
+    "name": "Paris Montparnasse",
+    "city": "Paris",
+    "country": "FR",
+    "code": "FRPMO",
+    "slug": "paris-montparnasse",
+    "type": "SNCF",
+    "url": "https://www.sncf-connect.com/app/home/live-board/departures?stationCode=FRPMO"
+  },
+  {
     "name": "Ancona",
     "city": "Ancona",
     "country": "IT",
