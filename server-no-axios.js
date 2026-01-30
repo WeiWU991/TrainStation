@@ -107,15 +107,15 @@ function formatSwissBoard(jsonData) {
   const stationboard = jsonData.stationboard || [];
   
   let html = `
-    <div style="font-family: Arial, sans-serif; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+    <div style="font-family: Arial, sans-serif; padding: 20px; background: linear-gradient(135deg, #E5007D 0%, #C90065 100%); min-height: 100vh;">
       <div style="max-width: 1200px; margin: 0 auto;">
         <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
-          <h1 style="color: #667eea; margin-bottom: 30px; font-size: 28px;">
+          <h1 style="color: #E5007D; margin-bottom: 30px; font-size: 28px;">
             🇨🇭 ${jsonData.station?.name || 'Swiss Station'} - 实时出发
           </h1>
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
-              <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+              <tr style="background: linear-gradient(135deg, #E5007D 0%, #C90065 100%); color: white;">
                 <th style="padding: 15px; text-align: left;">时间</th>
                 <th style="padding: 15px; text-align: left;">列车</th>
                 <th style="padding: 15px; text-align: left;">终点站</th>
@@ -137,9 +137,9 @@ function formatSwissBoard(jsonData) {
     html += `
       <tr style="background: ${bgColor}; border-bottom: 1px solid #dee2e6;">
         <td style="padding: 15px; font-weight: bold;">${time}</td>
-        <td style="padding: 15px; color: #667eea;">${category} ${number}</td>
+        <td style="padding: 15px; color: #E5007D;">${category} ${number}</td>
         <td style="padding: 15px;">${to}</td>
-        <td style="padding: 15px; text-align: center; background: #667eea; color: white; border-radius: 6px;">${platform}</td>
+        <td style="padding: 15px; text-align: center; background: #E5007D; color: white; border-radius: 6px;">${platform}</td>
       </tr>
     `;
   });
