@@ -3,6 +3,7 @@ const https = require('https');
 const http = require('http');
 const cheerio = require('cheerio');
 const rateLimit = require('express-rate-limit');
+const zlib = require('zlib');
 const path = require('path');
 const { URL } = require('url');
 
@@ -59,18 +60,35 @@ function fetch(url, options = {}) {
     };
 
     const req = lib.request(requestOptions, (res) => {
-      let data = '';
+      const chunks = [];
+      let stream = res;
       
-      res.on('data', (chunk) => {
-        data += chunk;
+      // 处理压缩编码
+      const encoding = res.headers['content-encoding'];
+      if (encoding === 'gzip') {
+        stream = res.pipe(zlib.createGunzip());
+      } else if (encoding === 'deflate') {
+        stream = res.pipe(zlib.createInflate());
+      } else if (encoding === 'br') {
+        stream = res.pipe(zlib.createBrotliDecompress());
+      }
+      
+      stream.on('data', (chunk) => {
+        chunks.push(chunk);
       });
       
-      res.on('end', () => {
+      stream.on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        const data = buffer.toString('utf8');
         resolve({
           status: res.statusCode,
           headers: res.headers,
           data: data
         });
+      });
+      
+      stream.on('error', (error) => {
+        reject(error);
       });
     });
 
