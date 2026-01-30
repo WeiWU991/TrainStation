@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欧洲铁路实时出发看板 - 车站选择</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+        }
+
+        .country-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .country-tab {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .country-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .country-tab.active {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .station-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .station-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #667eea;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .station-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .station-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .station-flag {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .station-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .station-city {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .station-code {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .stations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .country-tabs {
+                gap: 8px;
+            }
+
+            .country-tab {
+                padding: 10px 18px;
+                font-size: 0.9em;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚄 欧洲铁路实时出发看板</h1>
+            <p>选择您要查看的车站</p>
+        </header>
+
+        <div class="search-box">
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="🔍 搜索城市或车站名称... (例如: Milan, Berlin, Amsterdam)"
+                id="searchInput"
+            >
+        </div>
+
+        <div class="country-tabs" id="countryTabs">
+            <button class="country-tab active" data-country="all">🌍 全部</button>
+        </div>
+
+        <div class="stations-grid" id="stationsGrid">
+            <div class="loading">正在加载车站数据...</div>
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const API_BASE_URL = 'https://trainstation-production-706f.up.railway.app';
+        
+        // 国家信息配置
+        const countryInfo = {
+            'IT': { name: '意大利', flag: '🇮🇹', color: '#009246' },
+            'NL': { name: '荷兰', flag: '🇳🇱', color: '#FF4F00' },
+            'DE': { name: '德国', flag: '🇩🇪', color: '#000000' },
+            'CH': { name: '瑞士', flag: '🇨🇭', color: '#FF0000' },
+            'UK': { name: '英国', flag: '🇬🇧', color: '#012169' },
+            'FR': { name: '法国', flag: '🇫🇷', color: '#0055A4' }
+        };
+
+        let allStations = [];
+        let filteredStations = [];
+        let currentCountry = 'all';
+
+        // 初始化
+        async function init() {
+            try {
+                // 获取车站列表
+                const response = await fetch(`${API_BASE_URL}/stations/list`);
+                if (!response.ok) throw new Error('获取车站数据失败');
+                
+                allStations = await response.json();
+                
+                // 创建国家标签
+                createCountryTabs();
+                
+                // 显示所有车站
+                filterStations();
+                
+            } catch (error) {
+                console.error('初始化失败:', error);
+                document.getElementById('stationsGrid').innerHTML = `
+                    <div class="no-results">
+                        ⚠️ 无法加载车站数据<br>
+                        <small>请检查网络连接或稍后再试</small>
+                    </div>
+                `;
+            }
+        }
+
+        // 创建国家标签
+        function createCountryTabs() {
+            const tabsContainer = document.getElementById('countryTabs');
+            const countries = [...new Set(allStations.map(s => s.country))];
+            
+            countries.forEach(countryCode => {
+                const info = countryInfo[countryCode];
+                if (!info) return;
+                
+                const count = allStations.filter(s => s.country === countryCode).length;
+                const button = document.createElement('button');
+                button.className = 'country-tab';
+                button.dataset.country = countryCode;
+                button.innerHTML = `${info.flag} ${info.name} (${count})`;
+                button.onclick = () => selectCountry(countryCode);
+                tabsContainer.appendChild(button);
+            });
+        }
+
+        // 选择国家
+        function selectCountry(country) {
+            currentCountry = country;
+            
+            // 更新标签状态
+            document.querySelectorAll('.country-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.country === country) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            filterStations();
+        }
+
+        // 过滤车站
+        function filterStations() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredStations = allStations.filter(station => {
+                // 国家过滤
+                if (currentCountry !== 'all' && station.country !== currentCountry) {
+                    return false;
+                }
+                
+                // 搜索过滤
+                if (searchTerm) {
+                    return (
+                        station.name.toLowerCase().includes(searchTerm) ||
+                        station.city.toLowerCase().includes(searchTerm) ||
+                        station.code.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                return true;
+            });
+            
+            renderStations();
+        }
+
+        // 渲染车站列表
+        function renderStations() {
+            const grid = document.getElementById('stationsGrid');
+            
+            if (filteredStations.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        😔 未找到匹配的车站<br>
+                        <small>请尝试其他关键词</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredStations.map(station => {
+                const info = countryInfo[station.country];
+                return `
+                    <div class="station-card" onclick="goToBoard('${station.slug}')">
+                        <div class="station-flag">${info.flag}</div>
+                        <div class="station-name">${station.name}</div>
+                        <div class="station-city">${station.city}</div>
+                        <div class="station-code">CODE: ${station.code}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 跳转到看板页面
+        function goToBoard(slug) {
+            const boardUrl = `${API_BASE_URL}/board?station=${slug}`;
+            window.location.href = boardUrl;
+        }
+
+        // 搜索输入监听
+        document.getElementById('searchInput').addEventListener('input', filterStations);
+
+        // 页面加载时初始化
+        init();
+    </script>
+</body>
+</html>
