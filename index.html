@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欧洲铁路实时出发看板 - 车站选择</title>
+    <title>欧洲铁路实时出发看板</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -40,17 +40,17 @@
             opacity: 0.9;
         }
 
-        .search-box {
+        .search-container {
+            position: relative;
             background: white;
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 30px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .search-input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 15px 50px 15px 20px;
             font-size: 1.1em;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -62,110 +62,106 @@
             border-color: #667eea;
         }
 
-        .country-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .country-tab {
-            background: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .country-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        .country-tab.active {
-            background: #667eea;
-            color: white;
-            font-weight: bold;
-        }
-
-        .stations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .station-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .station-card::before {
-            content: '';
+        .search-icon {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: #667eea;
-            transform: scaleY(0);
-            transition: transform 0.3s;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #999;
         }
 
-        .station-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        .suggestions {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
         }
 
-        .station-card:hover::before {
-            transform: scaleY(1);
+        .suggestions.show {
+            display: block;
         }
 
-        .station-flag {
-            font-size: 2em;
-            margin-bottom: 10px;
+        .suggestion-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
         }
 
-        .station-name {
-            font-size: 1.3em;
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f8f8;
+        }
+
+        .suggestion-flag {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .suggestion-name {
             font-weight: bold;
+            font-size: 1.1em;
             color: #333;
-            margin-bottom: 8px;
         }
 
-        .station-city {
+        .suggestion-city {
             color: #666;
-            font-size: 0.95em;
-            margin-bottom: 8px;
+            font-size: 0.9em;
+            margin-top: 3px;
         }
 
-        .station-code {
+        .suggestion-code {
             display: inline-block;
             background: #f0f0f0;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
             color: #666;
             font-family: 'Courier New', monospace;
+            margin-top: 3px;
         }
 
         .no-results {
+            padding: 20px;
             text-align: center;
-            color: white;
-            font-size: 1.2em;
-            padding: 40px;
+            color: #999;
+        }
+
+        .info-box {
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
-            grid-column: 1 / -1;
+            padding: 20px;
+            margin-top: 30px;
+            color: white;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 5px 0;
+        }
+
+        .info-box li::before {
+            content: "✓ ";
+            margin-right: 8px;
         }
 
         @media (max-width: 768px) {
@@ -173,26 +169,18 @@
                 font-size: 1.8em;
             }
 
-            .stations-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .country-tabs {
-                gap: 8px;
-            }
-
-            .country-tab {
-                padding: 10px 18px;
-                font-size: 0.9em;
+            .search-input {
+                font-size: 1em;
+                padding: 12px 40px 12px 15px;
             }
         }
 
         .loading {
             text-align: center;
             color: white;
-            font-size: 1.2em;
-            padding: 40px;
-            grid-column: 1 / -1;
+            font-size: 1em;
+            padding: 20px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -200,225 +188,217 @@
     <div class="container">
         <header>
             <h1>🚄 欧洲铁路实时出发看板</h1>
-            <p>选择您要查看的车站</p>
+            <p>搜索并查看车站实时出发信息</p>
         </header>
 
-        <div class="search-box">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
             <input 
                 type="text" 
                 class="search-input" 
-                placeholder="🔍 搜索城市或车站名称... (例如: Milan, Berlin, Amsterdam)"
+                placeholder="输入城市或车站名称... (例如: Milan, Berlin, Amsterdam)"
                 id="searchInput"
+                autocomplete="off"
             >
+            <div class="suggestions" id="suggestions"></div>
         </div>
 
-        <div class="country-tabs" id="countryTabs">
-            <button class="country-tab active" data-country="all">🌍 全部</button>
+        <div class="info-box">
+            <h3>📍 使用说明</h3>
+            <ul>
+                <li>在搜索框中输入城市名或车站名</li>
+                <li>从下拉列表中选择车站</li>
+                <li>查看实时出发信息</li>
+            </ul>
         </div>
 
-        <div class="stations-grid" id="stationsGrid">
-            <div class="loading">正在加载车站数据...</div>
-        </div>
+        <div id="status" class="loading" style="display:none;"></div>
     </div>
 
     <script>
-        // 配置 - 使用相对路径，因为现在选择页面和 API 在同一个域名下
+        // 配置
         const API_BASE_URL = window.location.origin;
         
+        console.log('=== 初始化 ===');
         console.log('API Base URL:', API_BASE_URL);
         
         // 国家信息配置
         const countryInfo = {
-            'IT': { name: '意大利', flag: '🇮🇹', color: '#009246' },
-            'NL': { name: '荷兰', flag: '🇳🇱', color: '#FF4F00' },
-            'DE': { name: '德国', flag: '🇩🇪', color: '#000000' },
-            'CH': { name: '瑞士', flag: '🇨🇭', color: '#FF0000' },
-            'UK': { name: '英国', flag: '🇬🇧', color: '#012169' },
-            'FR': { name: '法国', flag: '🇫🇷', color: '#0055A4' }
+            'IT': { name: '意大利', flag: '🇮🇹' },
+            'NL': { name: '荷兰', flag: '🇳🇱' },
+            'DE': { name: '德国', flag: '🇩🇪' },
+            'CH': { name: '瑞士', flag: '🇨🇭' },
+            'UK': { name: '英国', flag: '🇬🇧' },
+            'FR': { name: '法国', flag: '🇫🇷' }
         };
 
         let allStations = [];
-        let filteredStations = [];
-        let currentCountry = 'all';
-
-        // 初始化
+        
+        // 初始化 - 加载车站数据
         async function init() {
             try {
-                console.log('正在获取车站列表...');
+                console.log('正在加载车站数据...');
                 
-                // 获取车站列表
                 const response = await fetch(`${API_BASE_URL}/stations/list`);
                 console.log('Response status:', response.status);
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('收到的数据:', data);
+                console.log('收到数据:', data);
                 
-                // 处理不同的数据格式
+                // 兼容不同的数据格式
                 if (Array.isArray(data)) {
-                    // 如果返回的是数组
                     allStations = data;
                 } else if (data.stations && Array.isArray(data.stations)) {
-                    // 如果返回的是对象，包含 stations 数组
                     allStations = data.stations;
                 } else {
                     throw new Error('数据格式不正确');
                 }
                 
-                console.log('加载了', allStations.length, '个车站');
-                
-                if (allStations.length === 0) {
-                    throw new Error('没有车站数据');
-                }
-                
-                // 创建国家标签
-                createCountryTabs();
-                
-                // 显示所有车站
-                filterStations();
+                console.log(`✓ 成功加载 ${allStations.length} 个车站`);
                 
             } catch (error) {
                 console.error('初始化失败:', error);
-                document.getElementById('stationsGrid').innerHTML = `
-                    <div class="no-results">
-                        ⚠️ 无法加载车站数据<br>
-                        <small>${error.message}</small><br>
-                        <small>请检查网络连接或<a href="${API_BASE_URL}/health" target="_blank" style="color: white;">查看API状态</a></small>
-                    </div>
-                `;
+                showStatus('⚠️ 无法加载车站数据: ' + error.message, 'error');
             }
         }
 
-        // 创建国家标签
-        function createCountryTabs() {
-            const tabsContainer = document.getElementById('countryTabs');
+        // 搜索车站
+        function searchStations(query) {
+            if (!query || query.length < 2) return [];
             
-            // 统计各国家车站数量
-            const countryCounts = {};
-            allStations.forEach(s => {
-                countryCounts[s.country] = (countryCounts[s.country] || 0) + 1;
+            const searchTerm = query.toLowerCase().trim();
+            console.log('搜索:', searchTerm);
+            
+            const results = allStations.filter(station => {
+                return (
+                    station.name.toLowerCase().includes(searchTerm) ||
+                    station.city.toLowerCase().includes(searchTerm) ||
+                    station.code.toLowerCase().includes(searchTerm) ||
+                    station.slug.includes(searchTerm)
+                );
             });
             
-            console.log('国家统计:', countryCounts);
-            
-            // 按顺序显示国家标签
-            const countryOrder = ['IT', 'NL', 'DE', 'CH', 'UK', 'FR'];
-            
-            countryOrder.forEach(countryCode => {
-                const count = countryCounts[countryCode];
-                if (!count) return; // 如果该国家没有车站，跳过
-                
-                const info = countryInfo[countryCode];
-                if (!info) return;
-                
-                const button = document.createElement('button');
-                button.className = 'country-tab';
-                button.dataset.country = countryCode;
-                button.innerHTML = `${info.flag} ${info.name} (${count})`;
-                button.onclick = () => selectCountry(countryCode);
-                tabsContainer.appendChild(button);
-            });
+            console.log(`找到 ${results.length} 个匹配结果`);
+            return results.slice(0, 10); // 最多显示10个
         }
 
-        // 选择国家
-        function selectCountry(country) {
-            currentCountry = country;
+        // 显示搜索建议
+        function showSuggestions(results) {
+            const suggestionsEl = document.getElementById('suggestions');
             
-            console.log('选择国家:', country);
-            
-            // 更新标签状态
-            document.querySelectorAll('.country-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.dataset.country === country) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            filterStations();
-        }
-
-        // 过滤车站
-        function filterStations() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            console.log('筛选条件 - 国家:', currentCountry, '搜索:', searchTerm);
-            
-            filteredStations = allStations.filter(station => {
-                // 国家过滤
-                if (currentCountry !== 'all' && station.country !== currentCountry) {
-                    return false;
-                }
-                
-                // 搜索过滤
-                if (searchTerm) {
-                    return (
-                        station.name.toLowerCase().includes(searchTerm) ||
-                        station.city.toLowerCase().includes(searchTerm) ||
-                        station.code.toLowerCase().includes(searchTerm) ||
-                        station.slug.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                return true;
-            });
-            
-            console.log('筛选结果:', filteredStations.length, '个车站');
-            
-            renderStations();
-        }
-
-        // 渲染车站列表
-        function renderStations() {
-            const grid = document.getElementById('stationsGrid');
-            
-            if (filteredStations.length === 0) {
-                grid.innerHTML = `
-                    <div class="no-results">
-                        😔 未找到匹配的车站<br>
-                        <small>请尝试其他关键词</small>
-                    </div>
-                `;
+            if (results.length === 0) {
+                suggestionsEl.innerHTML = '<div class="no-results">未找到匹配的车站</div>';
+                suggestionsEl.classList.add('show');
                 return;
             }
             
-            grid.innerHTML = filteredStations.map(station => {
-                const info = countryInfo[station.country];
-                if (!info) {
-                    console.warn('未知国家代码:', station.country);
-                    return '';
-                }
-                
+            suggestionsEl.innerHTML = results.map(station => {
+                const info = countryInfo[station.country] || { flag: '🚉', name: station.country };
                 return `
-                    <div class="station-card" onclick="goToBoard('${station.slug}')">
-                        <div class="station-flag">${info.flag}</div>
-                        <div class="station-name">${station.name}</div>
-                        <div class="station-city">${station.city}</div>
-                        <div class="station-code">CODE: ${station.code}</div>
+                    <div class="suggestion-item" onclick="selectStation('${station.slug}')">
+                        <span class="suggestion-flag">${info.flag}</span>
+                        <div style="display: inline-block; vertical-align: middle;">
+                            <div class="suggestion-name">${station.name}</div>
+                            <div class="suggestion-city">${station.city}</div>
+                            <span class="suggestion-code">CODE: ${station.code}</span>
+                        </div>
                     </div>
                 `;
             }).join('');
             
-            console.log('已渲染', filteredStations.length, '个车站');
+            suggestionsEl.classList.add('show');
+        }
+
+        // 隐藏搜索建议
+        function hideSuggestions() {
+            setTimeout(() => {
+                document.getElementById('suggestions').classList.remove('show');
+            }, 200);
+        }
+
+        // 选择车站
+        function selectStation(slug) {
+            console.log('选择车站:', slug);
+            const station = allStations.find(s => s.slug === slug);
+            
+            if (station) {
+                document.getElementById('searchInput').value = station.name;
+                hideSuggestions();
+                goToBoard(slug);
+            }
         }
 
         // 跳转到看板页面
         function goToBoard(slug) {
-            console.log('跳转到车站:', slug);
+            console.log('跳转到看板:', slug);
+            showStatus('正在加载看板...', 'loading');
+            
             const boardUrl = `${API_BASE_URL}/board?station=${slug}`;
             window.location.href = boardUrl;
         }
 
+        // 显示状态消息
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+            
+            if (type === 'error') {
+                statusEl.style.color = '#ff6b6b';
+            } else if (type === 'loading') {
+                statusEl.style.color = '#white';
+            }
+        }
+
         // 搜索输入监听
-        document.getElementById('searchInput').addEventListener('input', () => {
-            console.log('搜索输入:', document.getElementById('searchInput').value);
-            filterStations();
+        const searchInput = document.getElementById('searchInput');
+        
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            console.log('输入:', query);
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+            
+            const results = searchStations(query);
+            showSuggestions(results);
+        });
+
+        searchInput.addEventListener('focus', (e) => {
+            if (e.target.value.length >= 2) {
+                const results = searchStations(e.target.value);
+                showSuggestions(results);
+            }
+        });
+
+        searchInput.addEventListener('blur', hideSuggestions);
+
+        // 回车键搜索
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value;
+                const results = searchStations(query);
+                
+                if (results.length > 0) {
+                    selectStation(results[0].slug);
+                }
+            }
+        });
+
+        // 点击页面其他地方隐藏建议
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                hideSuggestions();
+            }
         });
 
         // 页面加载时初始化
-        console.log('=== 页面加载 ===');
         init();
     </script>
 </body>
