@@ -363,10 +363,10 @@
     "name": "Venezia Santa Lucia",
     "city": "Venice",
     "country": "IT",
-    "code": "1900",
+    "code": "3009",
     "slug": "venezia-santa-lucia",
     "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1900"
+    "url": "https://iechub.rfi.it/ArriviPartenze/en/arrivalsdepartures/Monitor?placeId=3009&arrivals=False"
   },
   {
     "name": "Venezia Mestre",

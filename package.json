@@ -1,10 +1,11 @@
 {
   "name": "train-board-proxy",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "European Train Station Departure Board",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "node node_modules/puppeteer/install.js"
   },
   "keywords": ["railway", "train", "departure-board"],
   "author": "",
@@ -12,7 +13,8 @@
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "express": "4.18.2",
-    "express-rate-limit": "7.1.5"
+    "express-rate-limit": "7.1.5",
+    "puppeteer": "21.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
