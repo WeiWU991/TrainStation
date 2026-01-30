@@ -1,5 +1,185 @@
 [
   {
+    "name": "Graz Hauptbahnhof",
+    "city": "Graz",
+    "country": "AT",
+    "code": "Graz+Hbf",
+    "slug": "graz-hauptbahnhof",
+    "type": "OBB",
+    "url": "https://fahrplan.oebb.at/bin/stboard.exe/dn?input=Graz+Hbf&boardType=dep&time=now"
+  },
+  {
+    "name": "Innsbruck Hauptbahnhof",
+    "city": "Innsbruck",
+    "country": "AT",
+    "code": "Innsbruck+Hbf",
+    "slug": "innsbruck-hauptbahnhof",
+    "type": "OBB",
+    "url": "https://fahrplan.oebb.at/bin/stboard.exe/dn?input=Innsbruck+Hbf&boardType=dep&time=now"
+  },
+  {
+    "name": "Salzburg Hauptbahnhof",
+    "city": "Salzburg",
+    "country": "AT",
+    "code": "Salzburg+Hbf",
+    "slug": "salzburg-hauptbahnhof",
+    "type": "OBB",
+    "url": "https://fahrplan.oebb.at/bin/stboard.exe/dn?input=Salzburg+Hbf&boardType=dep&time=now"
+  },
+  {
+    "name": "Wien Hauptbahnhof",
+    "city": "Vienna",
+    "country": "AT",
+    "code": "Wien+Hbf",
+    "slug": "wien-hauptbahnhof",
+    "type": "OBB",
+    "url": "https://fahrplan.oebb.at/bin/stboard.exe/dn?input=Wien+Hbf&boardType=dep&time=now"
+  },
+  {
+    "name": "Basel SBB",
+    "city": "Basel",
+    "country": "CH",
+    "code": "Basel SBB",
+    "slug": "basel-sbb",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Basel%20SBB&limit=40"
+  },
+  {
+    "name": "Bern",
+    "city": "Bern",
+    "country": "CH",
+    "code": "Bern",
+    "slug": "bern",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Bern&limit=40"
+  },
+  {
+    "name": "Genève",
+    "city": "Geneva",
+    "country": "CH",
+    "code": "Genève",
+    "slug": "gen-ve",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Gen%C3%A8ve&limit=40"
+  },
+  {
+    "name": "Lausanne",
+    "city": "Lausanne",
+    "country": "CH",
+    "code": "Lausanne",
+    "slug": "lausanne",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Lausanne&limit=40"
+  },
+  {
+    "name": "Luzern",
+    "city": "Lucerne",
+    "country": "CH",
+    "code": "Luzern",
+    "slug": "luzern",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Luzern&limit=40"
+  },
+  {
+    "name": "Zürich Hauptbahnhof",
+    "city": "Zurich",
+    "country": "CH",
+    "code": "Zürich Hauptbahnhof",
+    "slug": "z-rich-hauptbahnhof",
+    "type": "SBB",
+    "url": "https://transport.opendata.ch/v1/stationboard?station=Z%C3%BCrich%20Hauptbahnhof&limit=40"
+  },
+  {
+    "name": "Berlin Hauptbahnhof",
+    "city": "Berlin",
+    "country": "DE",
+    "code": "Berlin Hauptbahnhof",
+    "slug": "berlin-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Berlin%20Hauptbahnhof"
+  },
+  {
+    "name": "Köln Hauptbahnhof",
+    "city": "Cologne",
+    "country": "DE",
+    "code": "Köln Hauptbahnhof",
+    "slug": "k-ln-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/K%C3%B6ln%20Hauptbahnhof"
+  },
+  {
+    "name": "Dresden Hauptbahnhof",
+    "city": "Dresden",
+    "country": "DE",
+    "code": "Dresden Hauptbahnhof",
+    "slug": "dresden-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Dresden%20Hauptbahnhof"
+  },
+  {
+    "name": "Düsseldorf Hauptbahnhof",
+    "city": "Düsseldorf",
+    "country": "DE",
+    "code": "Düsseldorf Hauptbahnhof",
+    "slug": "d-sseldorf-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/D%C3%BCsseldorf%20Hauptbahnhof"
+  },
+  {
+    "name": "Frankfurt Hauptbahnhof",
+    "city": "Frankfurt",
+    "country": "DE",
+    "code": "Frankfurt Hauptbahnhof",
+    "slug": "frankfurt-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Frankfurt%20Hauptbahnhof"
+  },
+  {
+    "name": "Hamburg Hauptbahnhof",
+    "city": "Hamburg",
+    "country": "DE",
+    "code": "Hamburg Hauptbahnhof",
+    "slug": "hamburg-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Hamburg%20Hauptbahnhof"
+  },
+  {
+    "name": "Hannover Hauptbahnhof",
+    "city": "Hanover",
+    "country": "DE",
+    "code": "Hannover Hauptbahnhof",
+    "slug": "hannover-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Hannover%20Hauptbahnhof"
+  },
+  {
+    "name": "Leipzig Hauptbahnhof",
+    "city": "Leipzig",
+    "country": "DE",
+    "code": "Leipzig Hauptbahnhof",
+    "slug": "leipzig-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Leipzig%20Hauptbahnhof"
+  },
+  {
+    "name": "München Hauptbahnhof",
+    "city": "Munich",
+    "country": "DE",
+    "code": "München Hauptbahnhof",
+    "slug": "m-nchen-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/M%C3%BCnchen%20Hauptbahnhof"
+  },
+  {
+    "name": "Stuttgart Hauptbahnhof",
+    "city": "Stuttgart",
+    "country": "DE",
+    "code": "Stuttgart Hauptbahnhof",
+    "slug": "stuttgart-hauptbahnhof",
+    "type": "DB",
+    "url": "https://bahn.expert/Stuttgart%20Hauptbahnhof"
+  },
+  {
     "name": "Ancona",
     "city": "Ancona",
     "country": "IT",
@@ -27,24 +207,6 @@
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1500"
   },
   {
-    "name": "Brescia",
-    "city": "Brescia",
-    "country": "IT",
-    "code": "1505",
-    "slug": "brescia",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1505"
-  },
-  {
-    "name": "Cagliari",
-    "city": "Cagliari",
-    "country": "IT",
-    "code": "1512",
-    "slug": "cagliari",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1512"
-  },
-  {
     "name": "Catania Centrale",
     "city": "Catania",
     "country": "IT",
@@ -63,33 +225,6 @@
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1613"
   },
   {
-    "name": "Firenze Rifredi",
-    "city": "Florence",
-    "country": "IT",
-    "code": "1614",
-    "slug": "firenze-rifredi",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1614"
-  },
-  {
-    "name": "Firenze Campo di Marte",
-    "city": "Florence",
-    "country": "IT",
-    "code": "1615",
-    "slug": "firenze-campo-di-marte",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1615"
-  },
-  {
-    "name": "Foggia",
-    "city": "Foggia",
-    "country": "IT",
-    "code": "1617",
-    "slug": "foggia",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1617"
-  },
-  {
     "name": "Genova Piazza Principe",
     "city": "Genoa",
     "country": "IT",
@@ -97,33 +232,6 @@
     "slug": "genova-piazza-principe",
     "type": "RFI",
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1631"
-  },
-  {
-    "name": "Lecce",
-    "city": "Lecce",
-    "country": "IT",
-    "code": "1719",
-    "slug": "lecce",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1719"
-  },
-  {
-    "name": "Livorno Centrale",
-    "city": "Livorno",
-    "country": "IT",
-    "code": "1724",
-    "slug": "livorno-centrale",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1724"
-  },
-  {
-    "name": "Messina Centrale",
-    "city": "Messina",
-    "country": "IT",
-    "code": "1745",
-    "slug": "messina-centrale",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1745"
   },
   {
     "name": "Milano Centrale",
@@ -142,24 +250,6 @@
     "slug": "milano-porta-garibaldi",
     "type": "RFI",
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1729"
-  },
-  {
-    "name": "Milano Lambrate",
-    "city": "Milan",
-    "country": "IT",
-    "code": "1730",
-    "slug": "milano-lambrate",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1730"
-  },
-  {
-    "name": "Milano Rogoredo",
-    "city": "Milan",
-    "country": "IT",
-    "code": "1731",
-    "slug": "milano-rogoredo",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1731"
   },
   {
     "name": "Napoli Centrale",
@@ -189,51 +279,6 @@
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1778"
   },
   {
-    "name": "Perugia",
-    "city": "Perugia",
-    "country": "IT",
-    "code": "1782",
-    "slug": "perugia",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1782"
-  },
-  {
-    "name": "Pescara Centrale",
-    "city": "Pescara",
-    "country": "IT",
-    "code": "1785",
-    "slug": "pescara-centrale",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1785"
-  },
-  {
-    "name": "Pisa Centrale",
-    "city": "Pisa",
-    "country": "IT",
-    "code": "1790",
-    "slug": "pisa-centrale",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1790"
-  },
-  {
-    "name": "Reggio Calabria Centrale",
-    "city": "Reggio Calabria",
-    "country": "IT",
-    "code": "1797",
-    "slug": "reggio-calabria-centrale",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1797"
-  },
-  {
-    "name": "Rimini",
-    "city": "Rimini",
-    "country": "IT",
-    "code": "1799",
-    "slug": "rimini",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1799"
-  },
-  {
     "name": "Roma Termini",
     "city": "Rome",
     "country": "IT",
@@ -250,60 +295,6 @@
     "slug": "roma-tiburtina",
     "type": "RFI",
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1803"
-  },
-  {
-    "name": "Roma Ostiense",
-    "city": "Rome",
-    "country": "IT",
-    "code": "1804",
-    "slug": "roma-ostiense",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1804"
-  },
-  {
-    "name": "Roma Trastevere",
-    "city": "Rome",
-    "country": "IT",
-    "code": "1805",
-    "slug": "roma-trastevere",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1805"
-  },
-  {
-    "name": "Salerno",
-    "city": "Salerno",
-    "country": "IT",
-    "code": "1806",
-    "slug": "salerno",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1806"
-  },
-  {
-    "name": "Sassari",
-    "city": "Sassari",
-    "country": "IT",
-    "code": "1814",
-    "slug": "sassari",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1814"
-  },
-  {
-    "name": "Siracusa",
-    "city": "Syracuse",
-    "country": "IT",
-    "code": "1830",
-    "slug": "siracusa",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1830"
-  },
-  {
-    "name": "Taranto",
-    "city": "Taranto",
-    "country": "IT",
-    "code": "1843",
-    "slug": "taranto",
-    "type": "RFI",
-    "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1843"
   },
   {
     "name": "Trieste Centrale",
@@ -351,15 +342,6 @@
     "url": "https://iechub.rfi.it/ArriviPartenze/en/ArrivalsDepartures/Monitor?Arrivals=False&PlaceId=1904"
   },
   {
-    "name": "Almere Centrum",
-    "city": "Almere",
-    "country": "NL",
-    "code": "ALC",
-    "slug": "almere-centrum",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ALC&columns=1"
-  },
-  {
     "name": "Amsterdam Centraal",
     "city": "Amsterdam",
     "country": "NL",
@@ -367,15 +349,6 @@
     "slug": "amsterdam-centraal",
     "type": "NS",
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ASD&columns=1"
-  },
-  {
-    "name": "Schiphol Airport",
-    "city": "Amsterdam",
-    "country": "NL",
-    "code": "SPL",
-    "slug": "schiphol-airport",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=SPL&columns=1"
   },
   {
     "name": "Amsterdam Zuid",
@@ -396,49 +369,13 @@
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ASA&columns=1"
   },
   {
-    "name": "Amsterdam Sloterdijk",
+    "name": "Schiphol Airport",
     "city": "Amsterdam",
     "country": "NL",
-    "code": "ASSD",
-    "slug": "amsterdam-sloterdijk",
+    "code": "SPL",
+    "slug": "schiphol-airport",
     "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ASSD&columns=1"
-  },
-  {
-    "name": "Apeldoorn",
-    "city": "Apeldoorn",
-    "country": "NL",
-    "code": "APD",
-    "slug": "apeldoorn",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=APD&columns=1"
-  },
-  {
-    "name": "Arnhem Centraal",
-    "city": "Arnhem",
-    "country": "NL",
-    "code": "AH",
-    "slug": "arnhem-centraal",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=AH&columns=1"
-  },
-  {
-    "name": "Breda",
-    "city": "Breda",
-    "country": "NL",
-    "code": "BD",
-    "slug": "breda",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=BD&columns=1"
-  },
-  {
-    "name": "Delft",
-    "city": "Delft",
-    "country": "NL",
-    "code": "DT",
-    "slug": "delft",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=DT&columns=1"
+    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=SPL&columns=1"
   },
   {
     "name": "Eindhoven Centraal",
@@ -450,15 +387,6 @@
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=EHV&columns=1"
   },
   {
-    "name": "Enschede",
-    "city": "Enschede",
-    "country": "NL",
-    "code": "ES",
-    "slug": "enschede",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ES&columns=1"
-  },
-  {
     "name": "Groningen",
     "city": "Groningen",
     "country": "NL",
@@ -466,51 +394,6 @@
     "slug": "groningen",
     "type": "NS",
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=GN&columns=1"
-  },
-  {
-    "name": "Haarlem",
-    "city": "Haarlem",
-    "country": "NL",
-    "code": "HLM",
-    "slug": "haarlem",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=HLM&columns=1"
-  },
-  {
-    "name": "Leeuwarden",
-    "city": "Leeuwarden",
-    "country": "NL",
-    "code": "LW",
-    "slug": "leeuwarden",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=LW&columns=1"
-  },
-  {
-    "name": "Leiden Centraal",
-    "city": "Leiden",
-    "country": "NL",
-    "code": "LDN",
-    "slug": "leiden-centraal",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=LDN&columns=1"
-  },
-  {
-    "name": "Maastricht",
-    "city": "Maastricht",
-    "country": "NL",
-    "code": "MT",
-    "slug": "maastricht",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=MT&columns=1"
-  },
-  {
-    "name": "Nijmegen",
-    "city": "Nijmegen",
-    "country": "NL",
-    "code": "NM",
-    "slug": "nijmegen",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=NM&columns=1"
   },
   {
     "name": "Rotterdam Centraal",
@@ -531,15 +414,6 @@
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=GVC&columns=1"
   },
   {
-    "name": "Tilburg",
-    "city": "Tilburg",
-    "country": "NL",
-    "code": "TB",
-    "slug": "tilburg",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=TB&columns=1"
-  },
-  {
     "name": "Utrecht Centraal",
     "city": "Utrecht",
     "country": "NL",
@@ -549,24 +423,6 @@
     "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=UT&columns=1"
   },
   {
-    "name": "Zwolle",
-    "city": "Zwolle",
-    "country": "NL",
-    "code": "ZL",
-    "slug": "zwolle",
-    "type": "NS",
-    "url": "https://www.ns.nl/reisinformatie/externe-schermen/treinen/vertrektijden?stationId=ZL&columns=1"
-  },
-  {
-    "name": "Bath Spa",
-    "city": "Bath",
-    "country": "UK",
-    "code": "BTH",
-    "slug": "bath-spa",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/BTH"
-  },
-  {
     "name": "Birmingham New Street",
     "city": "Birmingham",
     "country": "UK",
@@ -574,60 +430,6 @@
     "slug": "birmingham-new-street",
     "type": "NationalRail",
     "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/BHM"
-  },
-  {
-    "name": "Brighton",
-    "city": "Brighton",
-    "country": "UK",
-    "code": "BTN",
-    "slug": "brighton",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/BTN"
-  },
-  {
-    "name": "Bristol Temple Meads",
-    "city": "Bristol",
-    "country": "UK",
-    "code": "BRI",
-    "slug": "bristol-temple-meads",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/BRI"
-  },
-  {
-    "name": "Cambridge",
-    "city": "Cambridge",
-    "country": "UK",
-    "code": "CBG",
-    "slug": "cambridge",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/CBG"
-  },
-  {
-    "name": "Cardiff Central",
-    "city": "Cardiff",
-    "country": "UK",
-    "code": "CDF",
-    "slug": "cardiff-central",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/CDF"
-  },
-  {
-    "name": "Chester",
-    "city": "Chester",
-    "country": "UK",
-    "code": "CTR",
-    "slug": "chester",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/CTR"
-  },
-  {
-    "name": "Coventry",
-    "city": "Coventry",
-    "country": "UK",
-    "code": "COV",
-    "slug": "coventry",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/COV"
   },
   {
     "name": "Edinburgh Waverley",
@@ -655,15 +457,6 @@
     "slug": "leeds",
     "type": "NationalRail",
     "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/LDS"
-  },
-  {
-    "name": "Leicester",
-    "city": "Leicester",
-    "country": "UK",
-    "code": "LEI",
-    "slug": "leicester",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/LEI"
   },
   {
     "name": "Liverpool Lime Street",
@@ -754,77 +547,8 @@
     "slug": "manchester-piccadilly",
     "type": "NationalRail",
     "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/MAN"
-  },
-  {
-    "name": "Newcastle",
-    "city": "Newcastle",
-    "country": "UK",
-    "code": "NCL",
-    "slug": "newcastle",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/NCL"
-  },
-  {
-    "name": "Nottingham",
-    "city": "Nottingham",
-    "country": "UK",
-    "code": "NOT",
-    "slug": "nottingham",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/NOT"
-  },
-  {
-    "name": "Oxford",
-    "city": "Oxford",
-    "country": "UK",
-    "code": "OXF",
-    "slug": "oxford",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/OXF"
-  },
-  {
-    "name": "Portsmouth Harbour",
-    "city": "Portsmouth",
-    "country": "UK",
-    "code": "PMH",
-    "slug": "portsmouth-harbour",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/PMH"
-  },
-  {
-    "name": "Reading",
-    "city": "Reading",
-    "country": "UK",
-    "code": "RDG",
-    "slug": "reading",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/RDG"
-  },
-  {
-    "name": "Sheffield",
-    "city": "Sheffield",
-    "country": "UK",
-    "code": "SHF",
-    "slug": "sheffield",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/SHF"
-  },
-  {
-    "name": "Southampton Central",
-    "city": "Southampton",
-    "country": "UK",
-    "code": "SOU",
-    "slug": "southampton-central",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/SOU"
-  },
-  {
-    "name": "York",
-    "city": "York",
-    "country": "UK",
-    "code": "YRK",
-    "slug": "york",
-    "type": "NationalRail",
-    "url": "https://ojp.nationalrail.co.uk/service/ldbboard/dep/YRK"
   }
 ]
+
+✅ 生成 61 个车站
+
